@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace FuegoDeQuasar.src.Model
+namespace FuegoDeQuasar.Model
 {
     public class Message
     {

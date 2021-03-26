@@ -1,5 +1,8 @@
 ﻿using FuegoDeQuasar.Configuration;
 using FuegoDeQuasar.Model;
+using FuegoDeQuasar.Model.Interfaces;
+using FuegoDeQuasar.Model.Requests;
+using FuegoDeQuasar.Model.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,13 +27,18 @@ namespace FuegoDeQuasar.Controllers
         }
 
         /// <summary>
-        /// Recover message and position of the emisor.
+        /// Recover help secret message and emitter position through the Alliance's satellites.
         /// </summary>
         /// <param name="secret"></param>
         /// <remarks>
         /// <para>
+        /// It receives the distance of the sender and an incomplete message to three satellites (Kenobi,Skywalker and Sato). 
+        /// If the information is complete, it returns the approximate position of the sender, and the reconstructed message.
+        /// </para>
+        /// <para>
         /// Sample request:
         ///     POST /topsecret/
+        ///     <code>
         ///     "satellites": [
         ///         {
         ///             “name”: "kenobi",
@@ -48,6 +56,7 @@ namespace FuegoDeQuasar.Controllers
         ///             “message”: ["este", "", "un", "", ""]
         ///         }
         ///      ]
+        ///     </code>
         /// </para>
         /// </remarks>
         /// <returns> The distance of the emitter and the original message. </returns>
@@ -61,9 +70,9 @@ namespace FuegoDeQuasar.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult PostMessage([FromBody] SecretTransmission secret)
+        public ActionResult<FinalResponse> PostMessage([FromBody] SecretTransmission secret)
         {
-            Point2D position;
+            IPoint position;
             string message;
 
             _logger.LogInformation("Validating message...");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FuegoDeQuasar.Model.Interfaces;
+using System;
 using System.Text.Json;
 
 namespace FuegoDeQuasar.Model
@@ -150,20 +151,24 @@ namespace FuegoDeQuasar.Model
                 y2 = p3.Y + (h * (p2.X - p1.X) / r12);
 
                 // TODO: Select combination with minimun error automatically
-                Console.WriteLine("*** Showing the error in the different solutions");
-                Console.WriteLine($"*** s1. Error (x1,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y1)) - r1)}");
-                Console.WriteLine($"*** s1. Error (x1,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y2)) - r1)}");
-                Console.WriteLine($"*** s1. Error (x2,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y1)) - r1)}");
-                Console.WriteLine($"*** s1. Error (x2,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y2)) - r1)}");
-                Console.WriteLine($"*** s2. Error (x1,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y1)) - r2)}");
-                Console.WriteLine($"*** s2. Error (x1,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y2)) - r2)}");
-                Console.WriteLine($"*** s2. Error (x2,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y1)) - r2)}");
-                Console.WriteLine($"*** s2. Error (x2,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y2)) - r2)}");
-                Console.WriteLine($"*** s3. Error (x1,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y1)) - r3)}");
-                Console.WriteLine($"*** s3. Error (x1,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y2)) - r3)}");
-                Console.WriteLine($"*** s3. Error (x2,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y1)) - r3)}");
-                Console.WriteLine($"*** s3. Error (x2,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y2)) - r3)}");
-                Console.WriteLine("*** The minimum error is in the 3th and 4th combination, and the right combination is the 3th.");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("\tShowing the error in the different solutions of:");
+                Console.WriteLine($"\tX={p1} ± ({ah:0.###}/{r12:0.###})({p2}-{p1})");
+                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y1)) - r1)}");
+                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y2)) - r1)}");
+                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y1)) - r1)}");
+                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y2)) - r1)}");
+                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y1)) - r2)}");
+                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y2)) - r2)}");
+                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y1)) - r2)}");
+                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y2)) - r2)}");
+                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y1)) - r3)}");
+                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y2)) - r3)}");
+                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y1)) - r3)}");
+                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y2)) - r3)}");
+                Console.WriteLine("\tThe minimum error is in the 3th and 4th combination, and the right combination is the 3th.");
+                Console.ResetColor();
             }
             catch (ArithmeticException e)
             {

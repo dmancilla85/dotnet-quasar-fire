@@ -1,4 +1,6 @@
-﻿namespace FuegoDeQuasar.Model
+﻿using FuegoDeQuasar.Model.Interfaces;
+
+namespace FuegoDeQuasar.Model
 {
     public class Satellite : ISatellite
     {

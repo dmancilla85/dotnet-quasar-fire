@@ -1,6 +1,8 @@
 ﻿using FuegoDeQuasar.Configuration;
 using FuegoDeQuasar.Model;
-using FuegoDeQuasar.src.Model;
+using FuegoDeQuasar.Model.Interfaces;
+using FuegoDeQuasar.Model.Requests;
+using FuegoDeQuasar.Model.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,19 +29,25 @@ namespace FuegoDeQuasar.Controllers
         }
 
         /// <summary>
-        /// Recover message and position of the emisor from a specific satellite.
+        /// Recover help secret message and emitter position, sending distance and message pieces by satellite.
         /// </summary>
         /// <param name="satellite"></param>
         /// <param name="secret"></param>
         /// <remarks>
         /// <para>
+        /// Receive the distance to a specific satellite and its incomplete message. If the information 
+        /// from all three satellites is available, it will try to obtain the position by triangulation 
+        /// and retrieve the original message. Each new message takes the place of the previous one on 
+        /// the respective satellite.
+        /// </para>
         /// Sample request:
         ///     POST /topsecret_split/[satellite_name]
+        /// <code>
         ///      {
         ///          “distance”: 100.0,
         ///          “message”: ["este", "", "", "mensaje", ""]
         ///      }
-        /// </para>
+        /// </code>
         /// </remarks>
         /// <returns> The distance of the emitter and the original message. </returns>
         /// <response code="200">Returns the emitter's position and the original message.</response>
@@ -52,9 +60,9 @@ namespace FuegoDeQuasar.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult PostMessage([FromRoute] string satellite, [FromBody] SatelliteMessageSplit secret)
+        public ActionResult<FinalResponse> PostMessage([FromRoute] string satellite, [FromBody] SecretTransmissionSplit secret)
         {
-            Point2D position;
+            IPoint position;
             string message;
 
             _logger.LogInformation("Validating message...");
