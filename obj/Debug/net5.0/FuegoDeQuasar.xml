@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FuegoDeQuasar</name>
+    </assembly>
+    <members>
+        <member name="M:FuegoDeQuasar.Controllers.TopSecretController.Get">
+            <summary>
+            Test function
+            </summary>
+            <returns> A single satellite</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.TopSecretController.PostMessage(FuegoDeQuasar.Controllers.SecretTransmission)">
+            <summary>
+            Recover message and position of the emisor.
+            </summary>
+            <param name="secret"></param>
+            <remarks>
+            <para>
+            Sample request:
+                POST /topsecret/
+                "satellites": [
+                    {
+                        “name”: "kenobi",
+                        “distance”: 100.0,
+                        “message”: ["este", "", "", "mensaje", ""]
+                    },
+                    {
+                        “name”: "skywalker",
+                        “distance”: 115.5
+                        “message”: ["", "es", "", "", "secreto"]
+                    },
+                    {
+                        “name”: "sato",
+                        “distance”: 142.7
+                        “message”: ["este", "", "un", "", ""]
+                    }
+            </para>
+            </remarks>
+            <returns> The distance of the emitter and the original message. </returns>
+            <response code="200">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.TotalWords">
+            <summary>
+            Count total words
+            </summary>
+            <returns>Total words</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.MinimumWords">
+            <summary>
+            Return the minimun number of words in the messages
+            </summary>
+            <returns>Minimun length of vector Message</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.CheckLengths">
+            <summary>
+            Check lenghts for phase shift
+            </summary>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Point2D.DistanceTo(FuegoDeQuasar.Model.IPoint)">
+            <summary>
+            The Pythagoras theorem, also known as the Pythagorean theorem, states that the square of
+            the length of the hypotenuse is equal to the sum of squares of the lengths of other two
+            sides of the right-angled triangle. Or, the sum of the squares of the two legs of a right
+            triangle is equal to the square of its hypotenuse.
+            </summary>
+            <param name="b">Point b</param>
+            <returns>The distance from this point to the point b</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Point2D.Heron(System.Double,System.Double,System.Double)">
+            <summary>
+            Heron's formula (sometimes called Hero's formula), named after Hero of Alexandria, gives
+            the area of a triangle when the length of all three sides are known. Unlike other triangle
+            area formulae, there is no need to calculate angles or other distances in the triangle first.
+            </summary>
+            <param name="a">Distance from A to B</param>
+            <param name="b">Distance from B to C</param>
+            <param name="c">Distance from C to A</param>
+            <returns>Area of a scalene triangle</returns>
+        </member>
+    </members>
+</doc>
