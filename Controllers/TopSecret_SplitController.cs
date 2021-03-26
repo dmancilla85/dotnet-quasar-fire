@@ -1,22 +1,25 @@
 ﻿using FuegoDeQuasar.Configuration;
 using FuegoDeQuasar.Model;
+using FuegoDeQuasar.src.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FuegoDeQuasar.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TopSecretController : ControllerBase
+    public class TopSecret_SplitController : Controller
     {
         private readonly ILogger<TopSecretController> _logger;
         private readonly SatellitesOptions _options;
+        private readonly static List<SatelliteMessage> Satellites = new();
 
-        public TopSecretController(ILogger<TopSecretController> logger,
+        public TopSecret_SplitController(ILogger<TopSecretController> logger,
                                     IOptions<SatellitesOptions> options)
         {
             _logger = logger;
@@ -24,30 +27,18 @@ namespace FuegoDeQuasar.Controllers
         }
 
         /// <summary>
-        /// Recover message and position of the emisor.
+        /// Recover message and position of the emisor from a specific satellite.
         /// </summary>
+        /// <param name="satellite"></param>
         /// <param name="secret"></param>
         /// <remarks>
         /// <para>
         /// Sample request:
-        ///     POST /topsecret/
-        ///     "satellites": [
-        ///         {
-        ///             “name”: "kenobi",
-        ///             “distance”: 100.0,
-        ///             “message”: ["este", "", "", "mensaje", ""]
-        ///         },
-        ///         {
-        ///             “name”: "skywalker",
-        ///             “distance”: 115.5
-        ///             “message”: ["", "es", "", "", "secreto"]
-        ///         },
-        ///         {
-        ///             “name”: "sato",
-        ///             “distance”: 142.7
-        ///             “message”: ["este", "", "un", "", ""]
-        ///         }
-        ///      ]
+        ///     POST /topsecret_split/[satellite_name]
+        ///      {
+        ///          “distance”: 100.0,
+        ///          “message”: ["este", "", "", "mensaje", ""]
+        ///      }
         /// </para>
         /// </remarks>
         /// <returns> The distance of the emitter and the original message. </returns>
@@ -55,13 +46,13 @@ namespace FuegoDeQuasar.Controllers
         /// <response code="400">If the body of the request is incomplete.</response>
         /// <response code="404">If there isn't enough information to recover the position or the original message.</response>
         /// <response code="500">If there is a problem to recover the satellites coordinates.</response>
-        [HttpPost]
+        [HttpPost("{satellite}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult PostMessage([FromBody] SecretTransmission secret)
+        public ActionResult PostMessage([FromRoute] string satellite, [FromBody] SatelliteMessageSplit secret)
         {
             Point2D position;
             string message;
@@ -91,17 +82,37 @@ namespace FuegoDeQuasar.Controllers
                 return StatusCode(500);
             }
 
-            _logger.LogInformation("Calculating message emitter distance...");
+            SatelliteMessage msg = Satellites.Find(s => string.Equals(s.Name.ToLowerInvariant(), satellite,
+                StringComparison.InvariantCultureIgnoreCase));
 
-            if (secret.Satellites.Count() < 3)
+            if (msg == null)
             {
-                _logger.LogError("Can't recover the emitter position.");
-                return NotFound("Can't recover the emitter position.");
+                if (satellite != kenobi.GetName() && satellite != skywalker.GetName() &&
+                satellite != sato.GetName())
+                {
+                    return BadRequest("The reported satellite does not exist.");
+                }
+                else
+                {
+                    Satellites.Add(new SatelliteMessage() { Distance = secret.Distance, Message = secret.Message, Name = satellite });
+                }
+            }
+            else
+            {
+                msg.Message = secret.Message;
+                msg.Distance = secret.Distance;
             }
 
-            position = (Point2D)Point2D.Triangulation(kenobi, secret.Satellites.FirstOrDefault(e => e.Name == "kenobi").Distance,
-                                  skywalker, secret.Satellites.FirstOrDefault(e => e.Name == "skywalker").Distance,
-                                  sato, secret.Satellites.FirstOrDefault(e => e.Name == "sato").Distance);
+            if (Satellites.Count < 3)
+            {
+                _logger.LogError("There's enough information to recover the emitter position and original message.");
+                return NotFound("There's enough information to recover the emitter position and original message.");
+            }
+
+            _logger.LogInformation("Calculating message emitter distance...");
+            position = (Point2D)Point2D.Triangulation(kenobi, Satellites.Find(e => e.Name == "kenobi").Distance,
+                                  skywalker, Satellites.Find(e => e.Name == "skywalker").Distance,
+                                  sato, Satellites.Find(e => e.Name == "sato").Distance);
 
             if (position == null)
             {
@@ -114,7 +125,7 @@ namespace FuegoDeQuasar.Controllers
             _logger.LogInformation($"Approximate distance to SkyWalker is {skywalker.DistanceToPoint(position)}");
             _logger.LogInformation($"Approximate distance to Sato is {sato.DistanceToPoint(position)}");
             _logger.LogInformation("Recovering original message from satellites...");
-            message = secret.GetMessage();
+            message = SecretTransmission.GetMessage(Satellites);
 
             if (message.Length == 0)
             {

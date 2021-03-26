@@ -4,12 +4,6 @@
         <name>FuegoDeQuasar</name>
     </assembly>
     <members>
-        <member name="M:FuegoDeQuasar.Controllers.TopSecretController.Get">
-            <summary>
-            Test function
-            </summary>
-            <returns> A single satellite</returns>
-        </member>
         <member name="M:FuegoDeQuasar.Controllers.TopSecretController.PostMessage(FuegoDeQuasar.Controllers.SecretTransmission)">
             <summary>
             Recover message and position of the emisor.
@@ -35,11 +29,36 @@
                         “distance”: 142.7
                         “message”: ["este", "", "un", "", ""]
                     }
+                 ]
             </para>
             </remarks>
             <returns> The distance of the emitter and the original message. </returns>
-            <response code="200">Returns the newly created item</response>
-            <response code="400">If the item is null</response>
+            <response code="200">Returns the emitter's position and the original message.</response>
+            <response code="400">If the body of the request is incomplete.</response>
+            <response code="404">If there isn't enough information to recover the position or the original message.</response>
+            <response code="500">If there is a problem to recover the satellites coordinates.</response>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.TopSecret_SplitController.PostMessage(System.String,FuegoDeQuasar.Model.SatelliteMessageSplit)">
+            <summary>
+            Recover message and position of the emisor from a specific satellite.
+            </summary>
+            <param name="satellite"></param>
+            <param name="secret"></param>
+            <remarks>
+            <para>
+            Sample request:
+                POST /topsecret_split/[satellite_name]
+                 {
+                     “distance”: 100.0,
+                     “message”: ["este", "", "", "mensaje", ""]
+                 }
+            </para>
+            </remarks>
+            <returns> The distance of the emitter and the original message. </returns>
+            <response code="200">Returns the emitter's position and the original message.</response>
+            <response code="400">If the body of the request is incomplete.</response>
+            <response code="404">If there isn't enough information to recover the position or the original message.</response>
+            <response code="500">If there is a problem to recover the satellites coordinates.</response>
         </member>
         <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.TotalWords">
             <summary>
@@ -53,10 +72,33 @@
             </summary>
             <returns>Minimun length of vector Message</returns>
         </member>
+        <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.MinimumWords(System.Collections.Generic.IEnumerable{FuegoDeQuasar.src.Model.SatelliteMessage})">
+            <summary>
+            Return the minimun number of words in the messages
+            </summary>
+            <returns>Minimun length of vector Message</returns>
+        </member>
         <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.CheckLengths">
             <summary>
             Check lenghts for phase shift
             </summary>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.CheckLengths(System.Collections.Generic.IEnumerable{FuegoDeQuasar.src.Model.SatelliteMessage})">
+            <summary>
+            Check lenghts for phase shift
+            </summary>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.GetMessage">
+            <summary>
+            Return the full message
+            </summary>
+            <returns>Message completed</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.SecretTransmission.GetMessage(System.Collections.Generic.IEnumerable{FuegoDeQuasar.src.Model.SatelliteMessage})">
+            <summary>
+            Return the full message
+            </summary>
+            <returns>Message completed</returns>
         </member>
         <member name="M:FuegoDeQuasar.Model.Point2D.DistanceTo(FuegoDeQuasar.Model.IPoint)">
             <summary>
@@ -67,6 +109,14 @@
             </summary>
             <param name="b">Point b</param>
             <returns>The distance from this point to the point b</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Point2D.DistanceFromTo(FuegoDeQuasar.Model.Point2D,FuegoDeQuasar.Model.IPoint)">
+            <summary>
+            Static version of DistanceTo function.
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
         </member>
         <member name="M:FuegoDeQuasar.Model.Point2D.Heron(System.Double,System.Double,System.Double)">
             <summary>

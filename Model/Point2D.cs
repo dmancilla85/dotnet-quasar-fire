@@ -51,7 +51,13 @@ namespace FuegoDeQuasar.Model
             return ret;
         }
 
-        internal static double DistanceFromTo(Point2D a,IPoint b)
+        /// <summary>
+        /// Static version of DistanceTo function.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        internal static double DistanceFromTo(Point2D a, IPoint b)
         {
             Point2D aux = (Point2D)b;
             double ret = 0;
@@ -120,7 +126,7 @@ namespace FuegoDeQuasar.Model
                 return null;
             }
 
-            double x1,x2=0,y1=0,y2;
+            double x1, x2 = 0, y1 = 0, y2;
 
             try
             {
@@ -143,8 +149,9 @@ namespace FuegoDeQuasar.Model
                 y1 = p3.Y + (h * (p2.X - p1.X) / r12);
                 y2 = p3.Y + (h * (p2.X - p1.X) / r12);
 
+                // TODO: Select combination with minimun error automatically
                 Console.WriteLine("*** Showing the error in the different solutions");
-                Console.WriteLine($"*** s1. Error (x1,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y1))-r1)}");
+                Console.WriteLine($"*** s1. Error (x1,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y1)) - r1)}");
                 Console.WriteLine($"*** s1. Error (x1,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y2)) - r1)}");
                 Console.WriteLine($"*** s1. Error (x2,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y1)) - r1)}");
                 Console.WriteLine($"*** s1. Error (x2,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y2)) - r1)}");
@@ -157,7 +164,6 @@ namespace FuegoDeQuasar.Model
                 Console.WriteLine($"*** s3. Error (x2,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y1)) - r3)}");
                 Console.WriteLine($"*** s3. Error (x2,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y2)) - r3)}");
                 Console.WriteLine("*** The minimum error is in the 3th and 4th combination, and the right combination is the 3th.");
-
             }
             catch (ArithmeticException e)
             {

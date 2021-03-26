@@ -53,18 +53,12 @@ namespace FuegoDeQuasar
                 {
                     Version = "v1",
                     Title = "Fuego de Quasar",
-                    Description = "A simple example ASP.NET Core Web API",
-                    TermsOfService = new Uri("https://example.com/terms"),
+                    Description = "API que retorna la fuente y mensaje de auxilio, por medio de la triangulación de los tres satélites en funcionamiento.",
                     Contact = new OpenApiContact
                     {
-                        Name = "Shayne Boyer",
-                        Email = string.Empty,
-                        Url = new Uri("https://twitter.com/spboyer"),
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Use under LICX",
-                        Url = new Uri("https://example.com/license"),
+                        Name = "David A. Mancilla",
+                        Email = "david.a.m@live.com",
+                        Url = new Uri("https://github.com/dmancilla85"),
                     }
                 });
 
