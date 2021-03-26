@@ -1,0 +1,14 @@
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\app.yaml
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\appsettings.Development.json
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\appsettings.json
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\appsettings.Production.json
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\FuegoDeQuasar.exe
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\FuegoDeQuasar.dll
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\FuegoDeQuasar.runtimeconfig.json
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\FuegoDeQuasar.pdb
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\Microsoft.OpenApi.dll
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\FuegoDeQuasar.xml
+C:\Users\David\AppData\Local\Temp\t1xz33qp.lhm\FuegoDeQuasar.deps.json

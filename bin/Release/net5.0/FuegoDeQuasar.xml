@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FuegoDeQuasar</name>
+    </assembly>
+    <members>
+        <member name="M:FuegoDeQuasar.Controllers.TopSecretController.PostMessage(FuegoDeQuasar.Model.Requests.SecretTransmission)">
+            <summary>
+            Recover help secret message and emitter position through the Alliance's satellites.
+            </summary>
+            <param name="secret"></param>
+            <remarks>
+            <para>
+            It receives the distance of the sender and an incomplete message to three satellites (Kenobi,Skywalker and Sato). 
+            If the information is complete, it returns the approximate position of the sender, and the reconstructed message.
+            </para>
+            <para>
+            Sample request:
+                POST /topsecret/
+                <code>
+                "satellites": [
+                    {
+                        “name”: "kenobi",
+                        “distance”: 100.0,
+                        “message”: ["este", "", "", "mensaje", ""]
+                    },
+                    {
+                        “name”: "skywalker",
+                        “distance”: 115.5
+                        “message”: ["", "es", "", "", "secreto"]
+                    },
+                    {
+                        “name”: "sato",
+                        “distance”: 142.7
+                        “message”: ["este", "", "un", "", ""]
+                    }
+                 ]
+                </code>
+            </para>
+            </remarks>
+            <returns> The distance of the emitter and the original message. </returns>
+            <response code="200">Returns the emitter's position and the original message.</response>
+            <response code="400">If the body of the request is incomplete.</response>
+            <response code="404">If there isn't enough information to recover the position or the original message.</response>
+            <response code="500">If there is a problem to recover the satellites coordinates.</response>
+        </member>
+        <member name="M:FuegoDeQuasar.Controllers.TopSecret_SplitController.PostMessage(System.String,FuegoDeQuasar.Model.Requests.SecretTransmissionSplit)">
+            <summary>
+            Recover help secret message and emitter position, sending distance and message pieces by satellite.
+            </summary>
+            <param name="satellite"></param>
+            <param name="secret"></param>
+            <remarks>
+            <para>
+            Receive the distance to a specific satellite and its incomplete message. If the information 
+            from all three satellites is available, it will try to obtain the position by triangulation 
+            and retrieve the original message. Each new message takes the place of the previous one on 
+            the respective satellite.
+            </para>
+            Sample request:
+                POST /topsecret_split/[satellite_name]
+            <code>
+                 {
+                     “distance”: 100.0,
+                     “message”: ["este", "", "", "mensaje", ""]
+                 }
+            </code>
+            </remarks>
+            <returns> The distance of the emitter and the original message. </returns>
+            <response code="200">Returns the emitter's position and the original message.</response>
+            <response code="400">If the body of the request is incomplete.</response>
+            <response code="404">If there isn't enough information to recover the position or the original message.</response>
+            <response code="500">If there is a problem to recover the satellites coordinates.</response>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Point2D.DistanceTo(FuegoDeQuasar.Model.Interfaces.IPoint)">
+            <summary>
+            The Pythagoras theorem, also known as the Pythagorean theorem, states that the square of
+            the length of the hypotenuse is equal to the sum of squares of the lengths of other two
+            sides of the right-angled triangle. Or, the sum of the squares of the two legs of a right
+            triangle is equal to the square of its hypotenuse.
+            </summary>
+            <param name="b">Point b</param>
+            <returns>The distance from this point to the point b</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Point2D.DistanceFromTo(FuegoDeQuasar.Model.Point2D,FuegoDeQuasar.Model.Interfaces.IPoint)">
+            <summary>
+            Static version of DistanceTo function.
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Point2D.Heron(System.Double,System.Double,System.Double)">
+            <summary>
+            Heron's formula (sometimes called Hero's formula), named after Hero of Alexandria, gives
+            the area of a triangle when the length of all three sides are known. Unlike other triangle
+            area formulae, there is no need to calculate angles or other distances in the triangle first.
+            </summary>
+            <param name="a">Distance from A to B</param>
+            <param name="b">Distance from B to C</param>
+            <param name="c">Distance from C to A</param>
+            <returns>Area of a scalene triangle</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Requests.SecretTransmission.TotalWords">
+            <summary>
+            Count total words
+            </summary>
+            <returns>Total words</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Requests.SecretTransmission.MinimumWords">
+            <summary>
+            Return the minimun number of words in the messages
+            </summary>
+            <returns>Minimun length of vector Message</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Requests.SecretTransmission.MinimumWords(System.Collections.Generic.IEnumerable{FuegoDeQuasar.Model.SatelliteMessage})">
+            <summary>
+            Return the minimun number of words in the messages
+            </summary>
+            <returns>Minimun length of vector Message</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Requests.SecretTransmission.CheckLengths">
+            <summary>
+            Check lenghts for phase shift
+            </summary>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Requests.SecretTransmission.CheckLengths(System.Collections.Generic.IEnumerable{FuegoDeQuasar.Model.SatelliteMessage})">
+            <summary>
+            Check lenghts for phase shift
+            </summary>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Requests.SecretTransmission.GetMessage">
+            <summary>
+            Return the full message
+            </summary>
+            <returns>Message completed</returns>
+        </member>
+        <member name="M:FuegoDeQuasar.Model.Requests.SecretTransmission.GetMessage(System.Collections.Generic.IEnumerable{FuegoDeQuasar.Model.SatelliteMessage})">
+            <summary>
+            Return the full message
+            </summary>
+            <returns>Message completed</returns>
+        </member>
+    </members>
+</doc>

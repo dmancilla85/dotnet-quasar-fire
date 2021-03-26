@@ -19,7 +19,7 @@ namespace FuegoDeQuasar.Controllers
     {
         private readonly ILogger<TopSecretController> _logger;
         private readonly SatellitesOptions _options;
-        private readonly static List<SatelliteMessage> Satellites = new();
+        private readonly static List<SatelliteMessage> Satellites = new List<SatelliteMessage>();
 
         public TopSecret_SplitController(ILogger<TopSecretController> logger,
                                     IOptions<SatellitesOptions> options)
@@ -62,7 +62,7 @@ namespace FuegoDeQuasar.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<FinalResponse> PostMessage([FromRoute] string satellite, [FromBody] SecretTransmissionSplit secret)
         {
-            IPoint position;
+            Point2D position;
             string message;
 
             _logger.LogInformation("Validating message...");
@@ -118,7 +118,7 @@ namespace FuegoDeQuasar.Controllers
             }
 
             _logger.LogInformation("Calculating message emitter distance...");
-            position = (Point2D)Point2D.Triangulation(kenobi, Satellites.Find(e => e.Name == "kenobi").Distance,
+            position = Point2D.Triangulation(kenobi, Satellites.Find(e => e.Name == "kenobi").Distance,
                                   skywalker, Satellites.Find(e => e.Name == "skywalker").Distance,
                                   sato, Satellites.Find(e => e.Name == "sato").Distance);
 

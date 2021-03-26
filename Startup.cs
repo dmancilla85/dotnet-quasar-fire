@@ -27,9 +27,10 @@ namespace FuegoDeQuasar
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
+                app.UseSwagger(c=> c.SerializeAsV2=true);
                 _ = app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fuego de Quasar V1"));
             }
+
 
             app.UseHttpsRedirection();
 
@@ -47,8 +48,13 @@ namespace FuegoDeQuasar
             services.AddControllers();
             services.Configure<SatellitesOptions>(Configuration.GetSection(
                                         SatellitesOptions.SatellitesConfiguration));
+
+
+
+
             services.AddSwaggerGen(c =>
             {
+ 
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",

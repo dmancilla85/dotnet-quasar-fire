@@ -66,7 +66,7 @@ namespace FuegoDeQuasar.Model.Requests
         /// </summary>
         private IEnumerable<SatelliteMessage> CheckLengths()
         {
-            List<SatelliteMessage> shifteds = new();
+            List<SatelliteMessage> shifteds = new List<SatelliteMessage>();
             int min = MinimumWords();
 
             foreach (var item in Satellites)
@@ -99,7 +99,7 @@ namespace FuegoDeQuasar.Model.Requests
         /// </summary>
         private static IEnumerable<SatelliteMessage> CheckLengths(IEnumerable<SatelliteMessage> satellites)
         {
-            List<SatelliteMessage> shifteds = new();
+            List<SatelliteMessage> shifteds = new List<SatelliteMessage>();
             int min = MinimumWords(satellites);
 
             foreach (var item in satellites)
@@ -134,7 +134,7 @@ namespace FuegoDeQuasar.Model.Requests
         public string GetMessage()
         {
             IEnumerable<string> mergedMessages = MergeBrokenMessages();
-            StringBuilder finalMessage = new();
+            StringBuilder finalMessage = new StringBuilder();
             int length = MinimumWords();
 
             for (int i = 0; i < mergedMessages.Count(); i++)
@@ -153,7 +153,7 @@ namespace FuegoDeQuasar.Model.Requests
         public static string GetMessage(IEnumerable<SatelliteMessage> satellites)
         {
             IEnumerable<string> mergedMessages = MergeBrokenMessages(satellites);
-            StringBuilder finalMessage = new();
+            StringBuilder finalMessage = new StringBuilder();
             int length = MinimumWords(satellites);
 
             for (int i = 0; i < mergedMessages.Count(); i++)
@@ -167,7 +167,7 @@ namespace FuegoDeQuasar.Model.Requests
 
         private IEnumerable<string> MergeBrokenMessages()
         {
-            List<string> message = new();
+            List<string> message = new List<string>();
             IEnumerable<SatelliteMessage> shifted = CheckLengths();
             int length = MinimumWords();
             string aux;
@@ -190,7 +190,7 @@ namespace FuegoDeQuasar.Model.Requests
 
         private static IEnumerable<string> MergeBrokenMessages(IEnumerable<SatelliteMessage> satellites)
         {
-            List<string> message = new();
+            List<string> message = new List<string>();
             IEnumerable<SatelliteMessage> shifted = CheckLengths(satellites);
             int length = MinimumWords(satellites);
             string aux;

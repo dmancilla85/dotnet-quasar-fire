@@ -6,7 +6,7 @@ namespace FuegoDeQuasar.Model.Response
 {
     public class FinalResponse
     {
-        public IPoint Position { get; set; }
+        public Point2D Position { get; set; }
 
         [DefaultValue("this is the original message")]
         public string Message { get; set; }

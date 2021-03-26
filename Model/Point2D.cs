@@ -75,25 +75,25 @@ namespace FuegoDeQuasar.Model
             return ret;
         }
 
-        public static Point2D operator -(Point2D a, Point2D b) => new()
+        public static Point2D operator -(Point2D a, Point2D b) => new Point2D()
         {
             X = a.X - b.X,
             Y = a.Y - b.Y
         };
 
-        public static Point2D operator +(Point2D a, Point2D b) => new()
+        public static Point2D operator +(Point2D a, Point2D b) => new Point2D()
         {
             X = a.X + b.X,
             Y = a.Y + b.Y
         };
 
-        public static Point2D operator *(Point2D a, Point2D b) => new()
+        public static Point2D operator *(Point2D a, Point2D b) => new Point2D()
         {
             X = a.X * b.Y,
             Y = b.X * a.Y
         };
 
-        public static Point2D operator *(double k, Point2D b) => new()
+        public static Point2D operator *(double k, Point2D b) => new Point2D()
         {
             X = k * b.X,
             Y = b.Y * k
@@ -119,7 +119,7 @@ namespace FuegoDeQuasar.Model
             return Math.Sqrt(s * (s - a) * (s - b) * (s - c));
         }
 
-        public static IPoint Triangulation(ISatellite s1, double r1, ISatellite s2, double r2, ISatellite s3, double r3)
+        public static Point2D Triangulation(ISatellite s1, double r1, ISatellite s2, double r2, ISatellite s3, double r3)
         {
             if (r1 == 0 || r2 == 0 || r3 == 0)
             {
@@ -155,18 +155,18 @@ namespace FuegoDeQuasar.Model
                 Console.BackgroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine("\tShowing the error in the different solutions of:");
                 Console.WriteLine($"\tX={p1} ± ({ah:0.###}/{r12:0.###})({p2}-{p1})");
-                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y1)) - r1)}");
-                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y2)) - r1)}");
-                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y1)) - r1)}");
-                Console.WriteLine($"\ts1. Difference distance D vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y2)) - r1)}");
-                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y1)) - r2)}");
-                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y2)) - r2)}");
-                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y1)) - r2)}");
-                Console.WriteLine($"\ts2. Difference distance D vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y2)) - r2)}");
-                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y1)) - r3)}");
-                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y2)) - r3)}");
-                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y1)) - r3)}");
-                Console.WriteLine($"\ts3. Difference distance D vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y2)) - r3)}");
+                Console.WriteLine($"\ts1. Difference distance informed to kenobi vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y1)) - r1)}");
+                Console.WriteLine($"\ts1. Difference distance informed to kenobi vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x1, y2)) - r1)}");
+                Console.WriteLine($"\ts1. Difference distance informed to kenobi vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y1)) - r1)}");
+                Console.WriteLine($"\ts1. Difference distance informed to kenobi vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo(p1, new Point2D(x2, y2)) - r1)}");
+                Console.WriteLine($"\ts2. Difference distance informed to skywalker vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y1)) - r2)}");
+                Console.WriteLine($"\ts2. Difference distance informed to skywalker vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x1, y2)) - r2)}");
+                Console.WriteLine($"\ts2. Difference distance informed to skywalker vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y1)) - r2)}");
+                Console.WriteLine($"\ts2. Difference distance informed to skywalker vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo(p2, new Point2D(x2, y2)) - r2)}");
+                Console.WriteLine($"\ts3. Difference distance informed to sato vs distance approximated (x1,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y1)) - r3)}");
+                Console.WriteLine($"\ts3. Difference distance informed to sato vs distance approximated (x1,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x1, y2)) - r3)}");
+                Console.WriteLine($"\ts3. Difference distance informed to sato vs distance approximated (x2,y1): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y1)) - r3)}");
+                Console.WriteLine($"\ts3. Difference distance informed to sato vs distance approximated (x2,y2): {Math.Abs(DistanceFromTo((Point2D)s3.GetCoords(), new Point2D(x2, y2)) - r3)}");
                 Console.WriteLine("\tThe minimum error is in the 3th and 4th combination, and the right combination is the 3th.");
                 Console.ResetColor();
             }

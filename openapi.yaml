@@ -1,0 +1,185 @@
+---
+swagger: '2.0'
+info:
+  title: Fuego de Quasar
+  description: API que retorna la fuente y mensaje de auxilio, por medio de la triangulación
+    de los tres satélites en funcionamiento.
+  contact:
+    name: David A. Mancilla
+    url: https://github.com/dmancilla85
+    email: david.a.m@live.com
+  version: v1
+host: fuegodequasar-308818.appspot.com
+paths:
+  "/api/TopSecret":
+    post:
+      operationId: topsecret
+      tags:
+      - TopSecret
+      summary: Recover help secret message and emitter position through the Alliance's
+        satellites.
+      description: "<br>\r\n            It receives the distance of the sender and
+        an incomplete message to three satellites (Kenobi,Skywalker and Sato). \r\n
+        \           If the information is complete, it returns the approximate position
+        of the sender, and the reconstructed message.\r\n            \r\n<br>\r\n
+        \           Sample request:\r\n                POST /topsecret/\r\n                <code>\r\n
+        \               \"satellites\": [\r\n                    {\r\n                        “name”:
+        \"kenobi\",\r\n                        “distance”: 100.0,\r\n                        “message”:
+        [\"este\", \"\", \"\", \"mensaje\", \"\"]\r\n                    },\r\n                    {\r\n
+        \                       “name”: \"skywalker\",\r\n                        “distance”:
+        115.5\r\n                        “message”: [\"\", \"es\", \"\", \"\", \"secreto\"]\r\n
+        \                   },\r\n                    {\r\n                        “name”:
+        \"sato\",\r\n                        “distance”: 142.7\r\n                        “message”:
+        [\"este\", \"\", \"un\", \"\", \"\"]\r\n                    }\r\n                 ]\r\n
+        \               </code>"
+      consumes:
+      - application/json
+      - text/json
+      - application/*+json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: ''
+        schema:
+          "$ref": "#/definitions/SecretTransmission"
+      responses:
+        '200':
+          description: Returns the emitter's position and the original message.
+          schema:
+            "$ref": "#/definitions/FinalResponse"
+        '400':
+          description: If the body of the request is incomplete.
+          schema:
+            "$ref": "#/definitions/ProblemDetails"
+        '404':
+          description: If there isn't enough information to recover the position or
+            the original message.
+          schema:
+            "$ref": "#/definitions/ProblemDetails"
+        '500':
+          description: If there is a problem to recover the satellites coordinates.
+  "/api/TopSecret_Split/{satellite}":
+    post:
+      operationId: topsecretsplit
+      tags:
+      - TopSecret_Split
+      summary: Recover help secret message and emitter position, sending distance
+        and message pieces by satellite.
+      description: "<br>\r\n            Receive the distance to a specific satellite
+        and its incomplete message. If the information \r\n            from all three
+        satellites is available, it will try to obtain the position by triangulation
+        \r\n            and retrieve the original message. Each new message takes
+        the place of the previous one on \r\n            the respective satellite.\r\n
+        \           \r\n            Sample request:\r\n                POST /topsecret_split/[satellite_name]\r\n
+        \           <code>\r\n                 {\r\n                     “distance”:
+        100.0,\r\n                     “message”: [\"este\", \"\", \"\", \"mensaje\",
+        \"\"]\r\n                 }\r\n            </code>"
+      consumes:
+      - application/json
+      - text/json
+      - application/*+json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: satellite
+        description: ''
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: ''
+        schema:
+          "$ref": "#/definitions/SecretTransmissionSplit"
+      responses:
+        '200':
+          description: Returns the emitter's position and the original message.
+          schema:
+            "$ref": "#/definitions/FinalResponse"
+        '400':
+          description: If the body of the request is incomplete.
+          schema:
+            "$ref": "#/definitions/ProblemDetails"
+        '404':
+          description: If there isn't enough information to recover the position or
+            the original message.
+          schema:
+            "$ref": "#/definitions/ProblemDetails"
+        '500':
+          description: If there is a problem to recover the satellites coordinates.
+definitions:
+  FinalResponse:
+    type: object
+    properties:
+      position:
+        "$ref": "#/definitions/Point2D"
+      message:
+        default: this is the original message
+        type: string
+  Point2D:
+    type: object
+    properties:
+      x:
+        format: double
+        type: number
+      y:
+        format: double
+        type: number
+  ProblemDetails:
+    type: object
+    properties:
+      type:
+        type: string
+      title:
+        type: string
+      status:
+        format: int32
+        type: integer
+      detail:
+        type: string
+      instance:
+        type: string
+    additionalProperties: {}
+  SatelliteMessage:
+    required:
+    - distance
+    - message
+    - name
+    type: object
+    properties:
+      distance:
+        format: double
+        default: 0
+        type: number
+      message:
+        type: array
+        items:
+          type: string
+      name:
+        default: kenobi
+        type: string
+  SecretTransmission:
+    required:
+    - satellites
+    type: object
+    properties:
+      satellites:
+        type: array
+        items:
+          "$ref": "#/definitions/SatelliteMessage"
+  SecretTransmissionSplit:
+    required:
+    - distance
+    - message
+    type: object
+    properties:
+      distance:
+        format: double
+        default: 0
+        type: number
+      message:
+        type: array
+        items:
+          type: string

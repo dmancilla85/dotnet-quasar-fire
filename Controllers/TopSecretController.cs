@@ -72,7 +72,7 @@ namespace FuegoDeQuasar.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<FinalResponse> PostMessage([FromBody] SecretTransmission secret)
         {
-            IPoint position;
+            Point2D position;
             string message;
 
             _logger.LogInformation("Validating message...");
@@ -108,7 +108,7 @@ namespace FuegoDeQuasar.Controllers
                 return NotFound("Can't recover the emitter position.");
             }
 
-            position = (Point2D)Point2D.Triangulation(kenobi, secret.Satellites.FirstOrDefault(e => e.Name == "kenobi").Distance,
+            position = Point2D.Triangulation(kenobi, secret.Satellites.FirstOrDefault(e => e.Name == "kenobi").Distance,
                                   skywalker, secret.Satellites.FirstOrDefault(e => e.Name == "skywalker").Distance,
                                   sato, secret.Satellites.FirstOrDefault(e => e.Name == "sato").Distance);
 
