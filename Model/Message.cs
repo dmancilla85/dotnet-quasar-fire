@@ -14,7 +14,7 @@ namespace FuegoDeQuasar.Model
 
         public override string ToString()
         {
-            StringBuilder message = new StringBuilder();
+            StringBuilder message = new();
 
             foreach (var item in words)
             {

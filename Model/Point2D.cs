@@ -27,97 +27,29 @@ namespace FuegoDeQuasar.Model
         public double X { get; set; }
         public double Y { get; set; }
 
-        /// <summary>
-        /// The Pythagoras theorem, also known as the Pythagorean theorem, states that the square of
-        /// the length of the hypotenuse is equal to the sum of squares of the lengths of other two
-        /// sides of the right-angled triangle. Or, the sum of the squares of the two legs of a right
-        /// triangle is equal to the square of its hypotenuse.
-        /// </summary>
-        /// <param name="b">Point b</param>
-        /// <returns>The distance from this point to the point b</returns>
-        public double DistanceTo(IPoint b)
-        {
-            Point2D aux = (Point2D)b;
-            double ret = 0;
-
-            try
-            {
-                ret = Math.Sqrt(Squared(aux.X - this.X) + Squared(aux.Y - this.Y));
-            }
-            catch (ArithmeticException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Static version of DistanceTo function.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        internal static double DistanceFromTo(Point2D a, IPoint b)
-        {
-            Point2D aux = (Point2D)b;
-            double ret = 0;
-
-            try
-            {
-                ret = Math.Sqrt(Squared(aux.X - a.X) + Squared(aux.Y - a.Y));
-            }
-            catch (ArithmeticException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return ret;
-        }
-
-        public static Point2D operator -(Point2D a, Point2D b) => new Point2D()
+        public static Point2D operator -(Point2D a, Point2D b) => new()
         {
             X = a.X - b.X,
             Y = a.Y - b.Y
         };
 
-        public static Point2D operator +(Point2D a, Point2D b) => new Point2D()
-        {
-            X = a.X + b.X,
-            Y = a.Y + b.Y
-        };
-
-        public static Point2D operator *(Point2D a, Point2D b) => new Point2D()
+        public static Point2D operator *(Point2D a, Point2D b) => new()
         {
             X = a.X * b.Y,
             Y = b.X * a.Y
         };
 
-        public static Point2D operator *(double k, Point2D b) => new Point2D()
+        public static Point2D operator *(double k, Point2D b) => new()
         {
             X = k * b.X,
             Y = b.Y * k
         };
 
-        public override string ToString()
+        public static Point2D operator +(Point2D a, Point2D b) => new()
         {
-            return JsonSerializer.Serialize(this);
-        }
-
-        /// <summary>
-        /// Heron's formula (sometimes called Hero's formula), named after Hero of Alexandria, gives
-        /// the area of a triangle when the length of all three sides are known. Unlike other triangle
-        /// area formulae, there is no need to calculate angles or other distances in the triangle first.
-        /// </summary>
-        /// <param name="a">Distance from A to B</param>
-        /// <param name="b">Distance from B to C</param>
-        /// <param name="c">Distance from C to A</param>
-        /// <returns>Area of a scalene triangle</returns>
-        private static double Heron(double a, double b, double c)
-        {
-            double s = (a + b + c) / 2;
-            return Math.Sqrt(s * (s - a) * (s - b) * (s - c));
-        }
+            X = a.X + b.X,
+            Y = a.Y + b.Y
+        };
 
         public static Point2D Triangulation(ISatellite s1, double r1, ISatellite s2, double r2, ISatellite s3, double r3)
         {
@@ -182,6 +114,74 @@ namespace FuegoDeQuasar.Model
             };
         }
 
+        /// <summary>
+        /// The Pythagoras theorem, also known as the Pythagorean theorem, states that the square of
+        /// the length of the hypotenuse is equal to the sum of squares of the lengths of other two
+        /// sides of the right-angled triangle. Or, the sum of the squares of the two legs of a right
+        /// triangle is equal to the square of its hypotenuse.
+        /// </summary>
+        /// <param name="b">Point b</param>
+        /// <returns>The distance from this point to the point b</returns>
+        public double DistanceTo(IPoint b)
+        {
+            Point2D aux = (Point2D)b;
+            double ret = 0;
+
+            try
+            {
+                ret = Math.Sqrt(Squared(aux.X - this.X) + Squared(aux.Y - this.Y));
+            }
+            catch (ArithmeticException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return ret;
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+
+        /// <summary>
+        /// Static version of DistanceTo function.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        internal static double DistanceFromTo(Point2D a, IPoint b)
+        {
+            Point2D aux = (Point2D)b;
+            double ret = 0;
+
+            try
+            {
+                ret = Math.Sqrt(Squared(aux.X - a.X) + Squared(aux.Y - a.Y));
+            }
+            catch (ArithmeticException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return ret;
+        }
+
         internal static double Squared(double? a) => Math.Pow(a == null ? 0 : (double)a, 2);
+
+        /// <summary>
+        /// Heron's formula (sometimes called Hero's formula), named after Hero of Alexandria, gives
+        /// the area of a triangle when the length of all three sides are known. Unlike other triangle
+        /// area formulae, there is no need to calculate angles or other distances in the triangle first.
+        /// </summary>
+        /// <param name="a">Distance from A to B</param>
+        /// <param name="b">Distance from B to C</param>
+        /// <param name="c">Distance from C to A</param>
+        /// <returns>Area of a scalene triangle</returns>
+        private static double Heron(double a, double b, double c)
+        {
+            double s = (a + b + c) / 2;
+            return Math.Sqrt(s * (s - a) * (s - b) * (s - c));
+        }
     }
 }

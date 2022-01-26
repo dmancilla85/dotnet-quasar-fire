@@ -1,13 +1,9 @@
-﻿using FuegoDeQuasar.Configuration;
-using FuegoDeQuasar.Model;
-using FuegoDeQuasar.Model.Interfaces;
-using FuegoDeQuasar.Model.Requests;
+﻿using FuegoDeQuasar.Model.Requests;
 using FuegoDeQuasar.Model.Response;
+using FuegoDeQuasar.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
 using System.Linq;
 
 namespace FuegoDeQuasar.Controllers
@@ -17,13 +13,13 @@ namespace FuegoDeQuasar.Controllers
     public class TopSecretController : ControllerBase
     {
         private readonly ILogger<TopSecretController> _logger;
-        private readonly SatellitesOptions _options;
+        private readonly ITopSecretService _topSecretService;
 
         public TopSecretController(ILogger<TopSecretController> logger,
-                                    IOptions<SatellitesOptions> options)
+                                    ITopSecretService topSecretService)
         {
             _logger = logger;
-            _options = options?.Value;
+            _topSecretService = topSecretService;
         }
 
         /// <summary>
@@ -32,7 +28,7 @@ namespace FuegoDeQuasar.Controllers
         /// <param name="secret"></param>
         /// <remarks>
         /// <para>
-        /// It receives the distance of the sender and an incomplete message to three satellites (Kenobi,Skywalker and Sato). 
+        /// It receives the distance of the sender and an incomplete message to three satellites (Kenobi,Skywalker and Sato).
         /// If the information is complete, it returns the approximate position of the sender, and the reconstructed message.
         /// </para>
         /// <para>
@@ -72,14 +68,13 @@ namespace FuegoDeQuasar.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<FinalResponse> PostMessage([FromBody] SecretTransmission secret)
         {
-            Point2D position;
-            string message;
-
             _logger.LogInformation("Validating message...");
 
             if (!ModelState.IsValid)
             {
-                foreach (string item in ModelState.Values.SelectMany(model => model.Errors?.Select(x => x.ErrorMessage)))
+                foreach (string item in ModelState
+                    .Values
+                    .SelectMany(model => model.Errors?.Select(x => x.ErrorMessage)))
                 {
                     _logger.LogError(item);
                 }
@@ -87,53 +82,14 @@ namespace FuegoDeQuasar.Controllers
                 return BadRequest(ModelState);
             }
 
-            ISatellite kenobi = _options.Satellites.FirstOrDefault(s => string.Equals(s.Name.ToLowerInvariant(), "kenobi",
-                StringComparison.InvariantCultureIgnoreCase));
-            ISatellite skywalker = _options.Satellites.FirstOrDefault(s => string.Equals(s.Name.ToLowerInvariant(), "skywalker",
-                StringComparison.InvariantCultureIgnoreCase));
-            ISatellite sato = _options.Satellites.FirstOrDefault(s => string.Equals(s.Name.ToLowerInvariant(), "sato",
-                StringComparison.InvariantCultureIgnoreCase));
+            FinalResponse response = _topSecretService.GetFinalResponse(secret);
 
-            if (kenobi == null || skywalker == null || sato == null)
+            if (response == null)
             {
-                _logger.LogCritical("Fatal error: Satellites configuration is missing.");
-                return StatusCode(500);
+                return NotFound("No se pudieron obtener los resultados");
             }
 
-            _logger.LogInformation("Calculating message emitter distance...");
-
-            if (secret.Satellites.Count() < 3)
-            {
-                _logger.LogError("Can't recover the emitter position.");
-                return NotFound("Can't recover the emitter position.");
-            }
-
-            position = Point2D.Triangulation(kenobi, secret.Satellites.FirstOrDefault(e => e.Name == "kenobi").Distance,
-                                  skywalker, secret.Satellites.FirstOrDefault(e => e.Name == "skywalker").Distance,
-                                  sato, secret.Satellites.FirstOrDefault(e => e.Name == "sato").Distance);
-
-            if (position == null)
-            {
-                _logger.LogError("Can't recover the emitter position.");
-                return NotFound("Can't recover the emitter position.");
-            }
-
-            _logger.LogInformation($"Emitter approximate position is {position}.");
-            _logger.LogInformation($"Approximate distance to Kenobi is {kenobi.DistanceToPoint(position)}");
-            _logger.LogInformation($"Approximate distance to SkyWalker is {skywalker.DistanceToPoint(position)}");
-            _logger.LogInformation($"Approximate distance to Sato is {sato.DistanceToPoint(position)}");
-            _logger.LogInformation("Recovering original message from satellites...");
-            message = secret.GetMessage();
-
-            if (message.Length == 0)
-            {
-                _logger.LogError("Can't recover the original message.");
-                return NotFound("Can't recover the original message.");
-            }
-
-            _logger.LogInformation($"The secret message is: {message}");
-
-            return Ok(new FinalResponse() { Position = position, Message = message });
+            return Ok(response);
         }
     }
 }

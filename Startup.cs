@@ -1,4 +1,7 @@
 using FuegoDeQuasar.Configuration;
+using FuegoDeQuasar.Services;
+using Hellang.Middleware.ProblemDetails;
+using Hellang.Middleware.ProblemDetails.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,17 +30,17 @@ namespace FuegoDeQuasar
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger(c=> c.SerializeAsV2=true);
-                _ = app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fuego de Quasar V1"));
+                app.UseSwagger(c => c.SerializeAsV2 = true);
+                _ = app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{Configuration["Swagger:Name"]} v1");
+                });
             }
 
-
             app.UseHttpsRedirection();
-
+            app.UseProblemDetails();
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
@@ -49,22 +52,22 @@ namespace FuegoDeQuasar
             services.Configure<SatellitesOptions>(Configuration.GetSection(
                                         SatellitesOptions.SatellitesConfiguration));
 
-
-
+            services.AddProblemDetails()
+                    .AddControllersWithViews()
+                    .AddProblemDetailsConventions();
 
             services.AddSwaggerGen(c =>
             {
- 
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Version = "v1",
-                    Title = "Fuego de Quasar",
-                    Description = "API que retorna la fuente y mensaje de auxilio, por medio de la triangulación de los tres satélites en funcionamiento.",
+                    Version = $"{Configuration["Swagger:Version"]}",
+                    Title = $"{Configuration["Swagger:Title"]}",
+                    Description = $"{Configuration["Swagger:Description"]}",
                     Contact = new OpenApiContact
                     {
-                        Name = "David A. Mancilla",
-                        Email = "david.a.m@live.com",
-                        Url = new Uri("https://github.com/dmancilla85"),
+                        Name = $"{Configuration["Swagger:Name"]}",
+                        Email = $"{Configuration["Swagger:Email"]}",
+                        Url = new Uri($"{Configuration["Swagger:GitHub"]}"),
                     }
                 });
 
@@ -73,6 +76,8 @@ namespace FuegoDeQuasar
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSingleton<ITopSecretService, TopSecretService>();
         }
     }
 }

@@ -13,23 +13,23 @@ namespace FuegoDeQuasar.Model
         public IPoint Coordinates { get; set; }
         public string Name { get; set; }
 
-        public string GetName() => Name;
-
-        public IPoint GetCoords() => Coordinates;
-
         public double DistanceTo(ISatellite satellite)
         {
             return Coordinates.DistanceTo(((Satellite)satellite).Coordinates);
         }
 
-        public override string ToString()
-        {
-            return $"{{Name: {Name}, Coordinates: {Coordinates.ToString()}}}";
-        }
-
         public double DistanceToPoint(IPoint point)
         {
             return Coordinates.DistanceTo(point);
+        }
+
+        public IPoint GetCoords() => Coordinates;
+
+        public string GetName() => Name;
+
+        public override string ToString()
+        {
+            return $"{{Name: {Name}, Coordinates: {Coordinates.ToString()}}}";
         }
     }
 }
